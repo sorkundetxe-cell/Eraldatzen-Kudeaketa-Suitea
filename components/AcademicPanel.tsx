@@ -120,7 +120,7 @@ const AcademicPanel: React.FC<AcademicPanelProps> = ({ data, onUpdate }) => {
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="space-y-4 flex-1">
             <h2 className="text-3xl font-black tracking-tight flex items-center"><Sparkles className="w-8 h-8 mr-3 text-blue-200" />Datu Akademikoak Excel bidez</h2>
-            <p className="text-blue-100 text-lg max-w-xl leading-relaxed">Igo ikastetxeko Barne Emaitzen Excel fitxategia IA bidez aztertzeko.</p>
+            <p className="text-blue-100 text-lg max-w-xl leading-relaxed">Igo ikastetxeako Barne Emaitzen Excel fitxategia IA bidez aztertzeko.</p>
           </div>
           <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
             <input type="file" className="hidden" ref={excelLHRef} accept=".xlsx,.xls,.csv" onChange={(e) => handleFileUpload(e, 'LH')} />
@@ -138,9 +138,17 @@ const AcademicPanel: React.FC<AcademicPanelProps> = ({ data, onUpdate }) => {
             <MetricBtn id="prom" label="Ez-promozionatuak" /><MetricBtn id="hk" label="Hizkuntza" /><MetricBtn id="mat" label="Matematika" /><MetricBtn id="zie" label="Zientzia" /><MetricBtn id="biz" label="Bizikidetza" />
           </div>
         </div>
-        <div className="h-96 w-full">
+        <div className="h-[400px] w-full min-w-0">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData}><CartesianGrid strokeDasharray="3 3" vertical={false} /><XAxis dataKey="name" /><YAxis /><Tooltip /><Legend /><Line type="monotone" dataKey="LH" stroke="#4f46e5" strokeWidth={4} /><Line type="monotone" dataKey="DBH" stroke="#ec4899" strokeWidth={4} /></LineChart>
+            <LineChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="LH" stroke="#4f46e5" strokeWidth={4} />
+              <Line type="monotone" dataKey="DBH" stroke="#ec4899" strokeWidth={4} />
+            </LineChart>
           </ResponsiveContainer>
         </div>
       </div>

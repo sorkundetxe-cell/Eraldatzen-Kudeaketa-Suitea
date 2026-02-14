@@ -32,7 +32,7 @@ export const PALANKA_RUBRICS = {
     ],
     gauzatzea: [
       { value: 0, label: "Inexistente", desc: "Gela barruko praktikak ez dira aldatu." },
-      { value: 0.33, label: "Pilotua", desc: "Irakasle gutxi batzuk proiektuekin edo kooperatiboarekin hasi dira." },
+      { value: 0.33, label: "Pilotua", desc: "Irakasle gutxi batzuk proiektuekin edo kooperatiboarekin hasi gara." },
       { value: 0.66, label: "Hedapena", desc: "Ikastetxearen erdian baino gehiagotan metodologi berriak ohikoak dira." },
       { value: 1.0, label: "Orokorra", desc: "Praktika pedagogikoa koherentea da gela eta irakasle guztien artean." }
     ],
@@ -74,7 +74,8 @@ export const MOCK_CENTRO: CentroEducativo = {
   eskola_mota: "Publikoa",
   eredua: "D",
   aholkularia: "Sorkunde Etxebarria",
-  garapen_orokorra: 8.45
+  garapen_orokorra: 8.45,
+  erronka_nagusia: "Digitalizazioa"
 };
 
 export const MOCK_PEM: PlanEstrategicoMejora = {
@@ -85,7 +86,6 @@ export const MOCK_PEM: PlanEstrategicoMejora = {
   talde_eragilea: [
     { id: '1', izena: 'Ainhoa Lasa', kargua: 'Zuzendaria' },
     { id: '2', izena: 'Mikel Goitia', kargua: 'Ikasketa Burua' },
-    // Fix: Corrected property name from 'id' to 'izena' to fix duplicate key and missing required property.
     { id: '3', izena: 'Sonia Arrate', kargua: 'Pedagogi Zuzendaria' }
   ]
 };
@@ -211,8 +211,7 @@ Ikastetxearen egoera oso sendoa da, batez ere **Garapen Orokorreko (8.45)** eta 
 3. **Ebaluazio Formatiboa**: P2 palankaren jarraipenean (RdC1B) agertzen denez, ebaluazio formatiborako tresnak digitalizatzea (H1.3) gomendatzen da arrakala digitalari aurre egiteko.
 `;
 
-export const DEFAULT_CENTRO: CentroEducativo = { id: 0, nombre: "Ikastetxe Berria", codigo_centro: "", lurraldea: "", eskola_mota: "", eredua: "", aholkularia: "", garapen_orokorra: 0 };
-// Fix typo in DEFAULT_PEM type definition: PlanEstrategicMejora -> PlanEstrategicoMejora
+export const DEFAULT_CENTRO: CentroEducativo = { id: 0, nombre: "Ikastetxe Berria", codigo_centro: "", lurraldea: "", eskola_mota: "", eredua: "", aholkularia: "", garapen_orokorra: 0, erronka_nagusia: "" };
 export const DEFAULT_PEM: PlanEstrategicoMejora = { centroId: 0, fecha_inicio: new Date().toISOString().split('T')[0], descripcion_proceso: "", helburua_1: 0, talde_eragilea: [] };
 export const DEFAULT_SATISFACTION: AsebetetzeMailaEmaitza = { centroId: 0, satisfaccion_general_final: 0, ik_0: 0, ik_1: 0, ik_2: 0, ik_3: 0, ikasle_ebidentzia_file: "", ir_0: 0, ir_1: 0, ir_2: 0, ir_3: 0, irakasle_ebidentzia_file: "", fa_0: 0, fa_1: 0, fa_2: 0, fa_3: 0, familia_ebidentzia_file: "" };
 export const DEFAULT_PALANCAS: PalankenEmaitza = { centroId: 0, palanken_batezbestekoa_final: 0, p1_a1_aplikazio: 0, p1_a1_gauzatze: 0, p1_a1_inpaktu: 0, p1_ebidentzia_file: "", p1_alcance_alumnado: 0, p1_alcance_profesorado: 0, p1_alcance_familias: 0, p2_a1_aplikazio: 0, p2_a1_gauzatze: 0, p2_a1_inpaktu: 0, p2_ebidentzia_file: "", p2_alcance_alumnado: 0, p2_alcance_profesorado: 0, p2_alcance_familias: 0, p3_a1_aplikazio: 0, p3_a1_gauzatze: 0, p3_a1_inpaktu: 0, p3_ebidentzia_file: "", p3_alcance_alumnado: 0, p3_alcance_profesorado: 0, p3_alcance_familias: 0, ebaluazio_xehetasunak: [] };

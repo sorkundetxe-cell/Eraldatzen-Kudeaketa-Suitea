@@ -42,7 +42,7 @@ const App: React.FC = () => {
   const [documents, setDocuments] = useState<DocumentData>(DEFAULT_DOCUMENTS);
   const [aiAnalysis, setAiAnalysis] = useState<string>('');
 
-  // Initial Cloud Pull on Load
+  // Initial Cloud Pull on Load (General for Admin/List)
   useEffect(() => {
     const initCloud = async () => {
       setCloudStatus('syncing');
@@ -55,16 +55,24 @@ const App: React.FC = () => {
   // Load School Data on Login
   useEffect(() => {
     if (isAuthenticated && currentSchoolCode && !isAdmin) {
-      const data = getSchoolData(currentSchoolCode);
-      setCentro(data.centro);
-      setPem(data.pem);
-      setSatisfaction(data.satisfaction);
-      setPalancas(data.palancas);
-      setAcademic(data.academic);
-      setAmia(data.amia);
-      setObjectives(data.objectives || []);
-      setDocuments(data.documents);
-      setAiAnalysis(data.aiAnalysis || '');
+      // Re-pull to get latest for this specific school just in case
+      const fetchLatest = async () => {
+          setCloudStatus('syncing');
+          await pullFromCloud();
+          // FIX: Added await to getSchoolData() to resolve Promise<SchoolData>
+          const data = await getSchoolData(currentSchoolCode);
+          setCentro(data.centro);
+          setPem(data.pem);
+          setSatisfaction(data.satisfaction);
+          setPalancas(data.palancas);
+          setAcademic(data.academic);
+          setAmia(data.amia);
+          setObjectives(data.objectives || []);
+          setDocuments(data.documents);
+          setAiAnalysis(data.aiAnalysis || '');
+          setCloudStatus('synced');
+      };
+      fetchLatest();
     }
   }, [isAuthenticated, currentSchoolCode, isAdmin]);
 
@@ -110,6 +118,7 @@ const App: React.FC = () => {
     setIsAdmin(false);
     setCurrentSchoolCode('');
     setCentro(DEFAULT_CENTRO);
+    setAiAnalysis('');
     setView('dashboard');
     localStorage.removeItem('ERALDATZEN_IS_ADMIN_SESSION');
   };
@@ -118,6 +127,11 @@ const App: React.FC = () => {
     setIsAdmin(false);
     setCurrentSchoolCode(code);
     setView('dashboard');
+  };
+
+  const handleDownloadReport = () => {
+    const currentData: SchoolData = { centro, pem, satisfaction, palancas, academic, amia, objectives, documents, aiAnalysis, lastUpdated: new Date().toISOString() };
+    generateWordReport(currentData);
   };
 
   const NavItem = ({ id, label, icon: Icon }: { id: ViewState | 'admin', label: string, icon: any }) => (
@@ -141,9 +155,9 @@ const App: React.FC = () => {
           <div className={`p-8 border-b border-slate-100 ${isAdmin ? 'bg-slate-900 text-white' : ''}`}>
             <h1 className="text-3xl font-black text-blue-700 font-mono tracking-tighter">ERALDATZEN</h1>
             <div className="flex items-center mt-2 space-x-2">
-                <div className={`w-2 h-2 rounded-full ${cloudStatus === 'synced' ? 'bg-emerald-500' : 'bg-amber-500 animate-pulse'}`}></div>
+                <div className={`w-2 h-2 rounded-full ${cloudStatus === 'synced' ? 'bg-emerald-500' : cloudStatus === 'error' ? 'bg-rose-500' : 'bg-amber-500 animate-pulse'}`}></div>
                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                  {cloudStatus === 'synced' ? 'Cloud Sinkronizatuta' : 'Hodeiarekin konektatzen...'}
+                  {cloudStatus === 'synced' ? 'Cloud Sinkronizatuta' : cloudStatus === 'error' ? 'Sync Errorea' : 'Hodeiarekin konektatzen...'}
                 </p>
             </div>
           </div>
@@ -197,6 +211,45 @@ const App: React.FC = () => {
         
         <div className="flex-1 overflow-auto p-6 lg:p-10">
           <div className="max-w-7xl mx-auto">
+            {!isAdmin && view !== 'admin' && view !== 'help' && (
+              <header className="mb-8 hidden lg:flex justify-between items-start print:hidden">
+                <div className="space-y-1">
+                    <div className="flex items-center space-x-3">
+                        <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase">
+                            {view === 'dashboard' && 'Aginte-panela'}
+                            {view === 'school' && 'Ikastetxea eta HP'}
+                            {view === 'amia' && 'AMIA Diagnostikoa'}
+                            {view === 'objectives' && 'Helburu Zehatzak'}
+                            {view === 'satisfaction' && 'Asebetetze Maila'}
+                            {view === 'palancas' && 'Eraldaketa Palankak'}
+                            {view === 'academic' && 'Emaitza Akademikoak'}
+                            {view === 'documents' && 'Dokumentu Kudeaketa'}
+                            {view === 'ai-assistant' && 'Adimen Artifiziala'}
+                        </h1>
+                        {isSaving && <span className="flex items-center space-x-1.5 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-[10px] font-black animate-pulse uppercase tracking-wider"><Save className="w-3 h-3"/><span>Gordetzen</span></span>}
+                    </div>
+                    <p className="text-slate-500 font-medium text-sm">
+                        {view === 'dashboard' && 'Sareko garapen globalaren laburpena.'}
+                        {view === 'school' && 'Ikastetxearen datuak eta Hobekuntza Plana.'}
+                        {view === 'amia' && 'Egoeraren diagnostiko estrategikoa (DAFO).'}
+                        {view === 'objectives' && 'Ikasturtean landu beharreko helburuak.'}
+                        {view === 'satisfaction' && 'Asebetetze-inkesten emaitzak.'}
+                        {view === 'palancas' && 'Palanken jarraipena eta RdC1 monitoreoa.'}
+                        {view === 'academic' && 'Konpetentziak eta promozio tasak.'}
+                        {view === 'documents' && 'Ebidentziak eta fitxategi kudeaketa.'}
+                        {view === 'ai-assistant' && 'Gemini IA bidezko analisi sakona.'}
+                    </p>
+                </div>
+                <button 
+                    onClick={handleDownloadReport}
+                    className="flex items-center space-x-2 px-6 py-3 bg-white border border-slate-200 hover:bg-slate-50 text-indigo-700 font-black rounded-2xl shadow-sm transition-all active:scale-95 border-b-4 border-indigo-100 hover:border-b-2 hover:translate-y-0.5"
+                >
+                    <FileDown className="w-5 h-5" />
+                    <span className="text-sm">DESKARGATU TXOSTENA</span>
+                </button>
+              </header>
+            )}
+
             {isAdmin && view === 'admin' ? <AdminDashboard onViewSchool={handleAdminViewSchool} /> : (
               <>
                 {view === 'dashboard' && <Dashboard centro={centro} pem={pem} satisfaction={satisfaction} palancas={palancas} academic={academic} objectives={objectives} />}

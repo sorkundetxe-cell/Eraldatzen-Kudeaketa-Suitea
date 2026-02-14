@@ -1,15 +1,22 @@
 
-// Derived from core_app/models.py
+export interface StreamlitEntry {
+  data: string;
+  ikastetxea: string;
+  erronka: string;
+  deskribapena: string;
+}
 
+// ... existing interfaces (CentroEducativo, etc.)
 export interface CentroEducativo {
   id: number;
   nombre: string;
   codigo_centro: string;
-  lurraldea: string; // Territorio
-  eskola_mota: string; // Tipo de Centro
-  eredua?: string; // Modelo Linguistico (A, B, D)
-  aholkularia: string; // Asesor/a
-  garapen_orokorra: number | null; // Desarrollo General (Decimal)
+  lurraldea: string; 
+  eskola_mota: string; 
+  eredua?: string; 
+  aholkularia: string; 
+  garapen_orokorra: number | null; 
+  erronka_nagusia?: string; 
 }
 
 export interface TaldeEragileaKidea {
@@ -20,181 +27,99 @@ export interface TaldeEragileaKidea {
 
 export interface PlanEstrategicoMejora {
   centroId: number;
-  fecha_inicio: string; // YYYY-MM-DD
+  fecha_inicio: string; 
   descripcion_proceso: string;
-  helburua_1: number | null; // Helburua 1 Emaitza
-  talde_eragilea?: TaldeEragileaKidea[]; // New field for Driving Group
+  helburua_1: number | null; 
+  talde_eragilea?: TaldeEragileaKidea[]; 
 }
 
 export interface AsebetetzeMailaEmaitza {
   centroId: number;
   satisfaccion_general_final: number | null;
-  
-  // Alumnado
-  ik_0: number | null; // Diagnostikoa
-  ik_1: number | null; // 1. Urtea
-  ik_2: number | null; // 2. Urtea
-  ik_3: number | null; // 3. Urtea
+  ik_0: number | null; ik_1: number | null; ik_2: number | null; ik_3: number | null;
   ikasle_ebidentzia_file?: string; 
-  
-  // Profesorado
-  ir_0: number | null; // Diagnostikoa
-  ir_1: number | null; // 1. Urtea
-  ir_2: number | null; // 2. Urtea
-  ir_3: number | null; // 3. Urtea
+  ir_0: number | null; ir_1: number | null; ir_2: number | null; ir_3: number | null;
   irakasle_ebidentzia_file?: string; 
-  
-  // Familias
-  fa_0: number | null; // Diagnostikoa
-  fa_1: number | null; // 1. Urtea
-  fa_2: number | null; // 2. Urtea
-  fa_3: number | null; // 3. Urtea
+  fa_0: number | null; fa_1: number | null; fa_2: number | null; fa_3: number | null;
   familia_ebidentzia_file?: string; 
 }
 
 export type MomentuMota = 'A' | 'B' | 'C';
 
 export interface PalankaMomentuDatuak {
-  id: string; // unique identifier
-  palanka: 1 | 2 | 3; // Palanca number
-  momentua: MomentuMota; // 'A' (RdC1A), 'B' (RdC1B), 'C' (RdC1C)
-  
-  batezbestekoa_global: number | null; // Media Global (0-1)
-  aplikazio_maila: number | null; // Nivel de Aplicación (0-1)
-  gauzatze_maila: number | null; // Nivel de Ejecución (0-1)
-  inpaktu_maila: number | null; // Nivel de Impacto (0-1)
-  
-  justifikazioa: string; // Justificación / Comentarios
-  hobekuntza_proposamenak?: string; // Propuestas de mejora for next course
+  id: string; 
+  palanka: 1 | 2 | 3; 
+  momentua: MomentuMota; 
+  batezbestekoa_global: number | null; 
+  aplikazio_maila: number | null; 
+  gauzatze_maila: number | null; 
+  inpaktu_maila: number | null; 
+  justifikazioa: string; 
+  hobekuntza_proposamenak?: string; 
 }
 
 export interface PalankenEmaitza {
   centroId: number;
   palanken_batezbestekoa_final: number | null;
-  
-  // Palanca 1 - Año 1
-  p1_a1_aplikazio: number | null;
-  p1_a1_gauzatze: number | null;
-  p1_a1_inpaktu: number | null;
+  p1_a1_aplikazio: number | null; p1_a1_gauzatze: number | null; p1_a1_inpaktu: number | null;
   p1_ebidentzia_file?: string;
-  // Alcance P1
-  p1_alcance_alumnado: number | null;
-  p1_alcance_profesorado: number | null;
-  p1_alcance_familias: number | null;
-
-  // Palanca 2 - Año 1
-  p2_a1_aplikazio: number | null;
-  p2_a1_gauzatze: number | null;
-  p2_a1_inpaktu: number | null;
+  p1_alcance_alumnado: number | null; p1_alcance_profesorado: number | null; p1_alcance_familias: number | null;
+  p2_a1_aplikazio: number | null; p2_a1_gauzatze: number | null; p2_a1_inpaktu: number | null;
   p2_ebidentzia_file?: string;
-  // Alcance P2
-  p2_alcance_alumnado: number | null;
-  p2_alcance_profesorado: number | null;
-  p2_alcance_familias: number | null;
-
-  // Palanca 3 - Año 1
-  p3_a1_aplikazio: number | null;
-  p3_a1_gauzatze: number | null;
-  p3_a1_inpaktu: number | null;
+  p2_alcance_alumnado: number | null; p2_alcance_profesorado: number | null; p2_alcance_familias: number | null;
+  p3_a1_aplikazio: number | null; p3_a1_gauzatze: number | null; p3_a1_inpaktu: number | null;
   p3_ebidentzia_file?: string;
-  // Alcance P3
-  p3_alcance_alumnado: number | null;
-  p3_alcance_profesorado: number | null;
-  p3_alcance_familias: number | null;
-
-  // Detailed Evaluations (RdC1A, B, C)
+  p3_alcance_alumnado: number | null; p3_alcance_profesorado: number | null; p3_alcance_familias: number | null;
   ebaluazio_xehetasunak?: PalankaMomentuDatuak[];
 }
 
 export interface AkademikoaUrtea {
   id: string;
-  ikasturtea: string; // "2023-2024"
+  ikasturtea: string; 
   ebidentzia_file?: string;
-  
-  prom_lh: number | null;
-  prom_dbh: number | null;
-  
-  hk_lh: number | null;
-  hk_dbh: number | null;
-  
-  matematika_lh: number | null;
-  matematika_dbh: number | null;
-  
-  zientzia_lh: number | null;
-  zientzia_dbh: number | null;
-  
-  bizikidetza_lh: number | null;
-  bizikidetza_dbh: number | null;
+  prom_lh: number | null; prom_dbh: number | null;
+  hk_lh: number | null; hk_dbh: number | null;
+  matematika_lh: number | null; matematika_dbh: number | null;
+  zientzia_lh: number | null; zientzia_dbh: number | null;
+  bizikidetza_lh: number | null; bizikidetza_dbh: number | null;
 }
 
 export interface EmaitzaAkademikoa {
   centroId: number;
-  // Current / Latest Data (kept for Dashboard summary)
-  prom_final_lh: number | null;
-  prom_final_dbh: number | null;
-  hk_a1_lh: number | null;
-  hk_a1_dbh: number | null;
-  matematika_a1_lh: number | null;
-  matematika_a1_dbh: number | null;
-  zientzia_a1_lh: number | null;
-  zientzia_a1_dbh: number | null;
-  bizikidetza_a1_lh: number | null;
-  bizikidetza_a1_dbh: number | null;
+  prom_final_lh: number | null; prom_final_dbh: number | null;
+  hk_a1_lh: number | null; hk_a1_dbh: number | null;
+  matematika_a1_lh: number | null; matematika_a1_dbh: number | null;
+  zientzia_a1_lh: number | null; zientzia_a1_dbh: number | null;
+  bizikidetza_a1_lh: number | null; bizikidetza_a1_dbh: number | null;
   akademikoa_ebidentzia_file?: string;
-
-  // History for graphs
   erregistro_historikoa: AkademikoaUrtea[];
 }
 
 export interface AmiaAnalisis {
-  diagnostikoa?: string; // Diagnóstico general
-  indarguneak: string; // Fortalezas
-  ahuleziak: string;   // Debilidades
-  aukerak: string;     // Oportunidades
-  mehatxuak: string;   // Amenazas
+  diagnostikoa?: string; 
+  indarguneak: string; 
+  ahuleziak: string;   
+  aukerak: string;     
+  mehatxuak: string;   
 }
 
 export interface Adierazlea {
-  id: string;
-  kodea: string; // Identifier code (e.g., "1.1")
-  testua: string; // Indicador description
-  lorpen_maila: number | null; // Achievement % (0-100)
-  pisua: number | null; // Weight/Ponderation (0-100 or relative)
-  oharrak: string; // Notes/Observations
+  id: string; kodea: string; testua: string; lorpen_maila: number | null; pisua: number | null; oharrak: string;
 }
 
 export interface HelburuZehaztua {
-  id: string;
-  testua: string; // Objective description
-  epea: string;
-  adierazleak: Adierazlea[]; // List of indicators
+  id: string; testua: string; epea: string; adierazleak: Adierazlea[];
 }
 
 export interface PalankaDoc {
-  id: string;
-  izena: string;
-  url?: string;
-  fitxategia?: string;
+  id: string; izena: string; url?: string; fitxategia?: string;
 }
 
 export interface DocumentData {
-  // Raw text for AI context (optional copy/paste)
-  pemText: string;
-  palancasText: string;
-
-  // New structured fields
-  pemUrl?: string; // Drive link for PEM
-  pemFile?: string; // Filename for uploaded PEM (.doc/.docx)
-  
-  palankakDocs: PalankaDoc[]; // List of documents for Palancas
+  pemText: string; palancasText: string; pemUrl?: string; pemFile?: string; palankakDocs: PalankaDoc[];
 }
 
 export type ViewState = 'dashboard' | 'school' | 'satisfaction' | 'palancas' | 'academic' | 'amia' | 'objectives' | 'documents' | 'ai-assistant' | 'help';
-
-export interface AnalysisResult {
-  summary: string;
-  recommendations: string[];
-}
 
 export interface SchoolData {
   centro: CentroEducativo;
@@ -207,5 +132,5 @@ export interface SchoolData {
   documents: DocumentData;
   lastUpdated: string;
   password?: string;
-  aiAnalysis?: string; // New field to store AI analysis
+  aiAnalysis?: string;
 }

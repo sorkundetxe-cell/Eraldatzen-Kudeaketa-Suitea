@@ -5,7 +5,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   RadialBarChart, RadialBar
 } from 'recharts';
-import { Users, School, Activity, Layers, GraduationCap, Target, BookOpen, Binary, Atom, HeartHandshake, TrendingUp } from 'lucide-react';
+import { Users, School, Activity, Layers, GraduationCap, Target, BookOpen, Binary, Atom, HeartHandshake, TrendingUp, Zap } from 'lucide-react';
 
 interface DashboardProps {
   centro: CentroEducativo;
@@ -18,7 +18,6 @@ interface DashboardProps {
 
 const Dashboard: React.FC<DashboardProps> = ({ centro, pem, satisfaction, palancas, academic, objectives }) => {
   
-  // Helburu espezifikoen lorpen-maila haztatua (ponderazioa) kalkulatu
   const calculateObjectivesAvg = () => {
      if (!objectives || objectives.length === 0) return 0;
      
@@ -41,7 +40,6 @@ const Dashboard: React.FC<DashboardProps> = ({ centro, pem, satisfaction, palanc
      return objectivesWithIndicatorsCount === 0 ? 0 : weightedTotalAchievement / objectivesWithIndicatorsCount;
   };
 
-  // LH eta DBHren arteko batezbestekoa kalkulatu estatistiketarako
   const calculateAcademicAvg = (valLH: number | null, valDBH: number | null) => {
     if (valLH === null && valDBH === null) return '-';
     if (valLH === null && valDBH !== null) return valDBH.toFixed(2);
@@ -104,10 +102,10 @@ const Dashboard: React.FC<DashboardProps> = ({ centro, pem, satisfaction, palanc
                 color="bg-rose-50"
             />
             <StatCard 
-                title="Asebetetzea" 
-                value={satisfaction.satisfaccion_general_final?.toFixed(2) || '-'} 
-                icon={<Users className="w-5 h-5 text-blue-600" />} 
-                color="bg-blue-50"
+                title="Erronka Nagusia" 
+                value={centro.erronka_nagusia || 'Zehaztu gabe'} 
+                icon={<Zap className="w-5 h-5 text-amber-600" />} 
+                color="bg-amber-50"
             />
             <StatCard 
                 title="Palankak B.B." 
@@ -119,8 +117,8 @@ const Dashboard: React.FC<DashboardProps> = ({ centro, pem, satisfaction, palanc
             <StatCard 
                 title="Aholkularia" 
                 value={centro.aholkularia.split(' ')[0]} 
-                icon={<School className="w-5 h-5 text-amber-600" />} 
-                color="bg-amber-50"
+                icon={<School className="w-5 h-5 text-blue-600" />} 
+                color="bg-blue-50"
             />
         </div>
       </div>
@@ -177,7 +175,7 @@ const Dashboard: React.FC<DashboardProps> = ({ centro, pem, satisfaction, palanc
             <Users className="w-5 h-5 mr-2 text-blue-600" />
             Asebetetze Mailaren Bilakaera
           </h3>
-          <div className="h-80">
+          <div className="h-[400px] w-full min-w-0">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={satisfactionData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -203,7 +201,7 @@ const Dashboard: React.FC<DashboardProps> = ({ centro, pem, satisfaction, palanc
             <Activity className="w-5 h-5 mr-2 text-indigo-600" />
             Garapen Indizea
           </h3>
-          <div className="h-64 w-full relative">
+          <div className="h-[400px] w-full min-w-0 relative">
             <ResponsiveContainer width="100%" height="100%">
               <RadialBarChart 
                 innerRadius="80%" 
@@ -237,7 +235,7 @@ const StatCard: React.FC<{title: string, value: string | number, subtext?: strin
   <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-start justify-between hover:shadow-md transition-shadow">
     <div>
       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">{title}</p>
-      <h4 className="text-2xl font-black text-slate-900 tracking-tight">{value}</h4>
+      <h4 className="text-xl font-black text-slate-900 tracking-tight">{value}</h4>
       {subtext && <p className="text-[10px] text-slate-500 font-bold mt-1 uppercase opacity-60">{subtext}</p>}
     </div>
     <div className={`p-2.5 rounded-xl ${color} shadow-sm`}>

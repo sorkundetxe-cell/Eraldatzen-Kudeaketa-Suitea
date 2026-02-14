@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { CentroEducativo, PlanEstrategicoMejora, TaldeEragileaKidea, AsebetetzeMailaEmaitza } from '../types';
-import { Save, Calendar, Users, Trash2, UserPlus, School } from 'lucide-react';
+import { Save, Calendar, Users, Trash2, UserPlus, School, Zap } from 'lucide-react';
 
 interface SchoolFormProps {
   centro: CentroEducativo;
@@ -68,6 +68,7 @@ const SchoolForm: React.FC<SchoolFormProps> = ({ centro, pem, satisfaction, onUp
   const territories = ["Araba", "Bizkaia", "Gipuzkoa"];
   const schoolTypes = ["Publikoa", "Itunpekoa"];
   const models = ["A", "B", "D"];
+  const challenges = ["Digitalizazioa", "Inklusioa", "Bizikidetza", "Berrikuntza", "Metodologia"];
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-12">
@@ -85,6 +86,19 @@ const SchoolForm: React.FC<SchoolFormProps> = ({ centro, pem, satisfaction, onUp
               value={localCentro.nombre}
               onChange={e => handleCentroChange('nombre', e.target.value)}
             />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-slate-700 mb-1 flex items-center">
+               <Zap className="w-4 h-4 mr-1 text-amber-500" /> Erronka Nagusia
+            </label>
+            <select 
+              className="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none transition-all bg-white font-bold text-slate-700"
+              value={localCentro.erronka_nagusia || ''}
+              onChange={e => handleCentroChange('erronka_nagusia', e.target.value)}
+            >
+              <option value="">Aukeratu erronka...</option>
+              {challenges.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
           </div>
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-1">Lurraldea</label>
