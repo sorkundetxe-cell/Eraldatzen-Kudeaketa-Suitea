@@ -1,0 +1,76 @@
+streamlit
+streamlit-gsheets
+pandas
+import streamlit as st
+from streamlit_gsheets import GSheetsConnection
+import pandas as pd
+from datetime import datetime
+
+# Orriaren konfigurazioa
+st.set_page_config(page_title="Eraldatzen Kudeaketa Suitea", layout="centered")
+
+# Zure Google Sheets URL-a
+SHEET_URL = "https://docs.google.com/spreadsheets/d/191kef9_lZruwxY3fGZyCD3GOYvcnC01DWQcEN-Vx7t0/edit?usp=sharing"
+
+st.title("📊 Eraldatzen: Kudeaketa Suitea")
+st.write("Berritzeguneko aholkularitza eta ikastetxeen arteko elkarlana.")
+
+# Konexioa sortu
+conn = st.connection("gsheets", type=GSheetsConnection)
+
+# --- INPRIMAKIA ---
+with st.form(key="ikastetxe_form"):
+    st.subheader("Sartu ikastetxearen datuak")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        ikastetxea = st.text_input("Ikastetxearen izena:")
+    with col2:
+        erronka = st.selectbox("Erronka nagusia:", ["Digitalizazioa", "Inklusioa", "Metodologia", "Bizikidetza"])
+    
+    deskribapena = st.text_area("Deskribapena edo oharrak:")
+    
+    submit_button = st.form_submit_button(label="Gorde datuak")
+
+# --- DATUAK GORDETZEKO LOGIKA ---
+if submit_button:
+    if ikastetxea and deskribapena:
+        try:
+            # Gaurko data lortu
+            gaur = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            
+            # Datu berriak formatu koadroan (DataFrame)
+            new_data = pd.DataFrame([{
+                "Data": gaur, 
+                "Ikastetxea": ikastetxea, 
+                "Deskribapena": deskribapena, 
+                "Erronka": erronka
+            }])
+            
+            # Lehendik dauden datuak irakurri (Sheet1 orritik)
+            existing_data = conn.read(spreadsheet=SHEET_URL, worksheet="Sheet1")
+            
+            # Datu berriak gehitu
+            updated_df = pd.concat([existing_data, new_data], ignore_index=True)
+            
+            # Google Sheets-en idatzi
+            conn.update(spreadsheet=SHEET_URL, worksheet="Sheet1", data=updated_df)
+            
+            st.success(f"✅ Eskerrik asko! {ikastetxea}(e)ko datuak ondo gorde dira.")
+            st.balloons()
+            
+        except Exception as e:
+            st.error(f"Ezin izan dira datuak gorde: {e}")
+    else:
+        st.warning("Mesedez, bete ikastetxearen izena eta deskribapena.")
+
+# --- DATUAK IKUSI ---
+st.markdown("---")
+if st.checkbox("Ikusi ikastetxe guztien zerrenda (Datu-basea)"):
+    try:
+        data = conn.read(spreadsheet=SHEET_URL, worksheet="Sheet1")
+        st.dataframe(data, use_container_width=True)
+    except:
+        st.info("Datu-basea hutsik dago momentuz.")
+        [connections.gsheets]
+spreadsheet = "https://docs.google.com/spreadsheets/d/191kef9_lZruwxY3fGZyCD3GOYvcnC01DWQcEN-Vx7t0/edit?usp=sharing"
